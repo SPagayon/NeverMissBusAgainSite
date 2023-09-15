@@ -1,3 +1,12 @@
+// Function to format time as HH:MM AM/PM
+function formatTime(timeNumeric) {
+    const hours = Math.floor(timeNumeric / 100);
+    const minutes = timeNumeric % 100;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    return `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+}
+
 function calculateNextDeparture(scheduleData) {
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
@@ -23,16 +32,10 @@ function calculateNextDeparture(scheduleData) {
         }
     }
 
-    // Format the next departure and arrival times as HH:MM AM/PM
-    const formatTime = (timeNumeric) => {
-        const hours = Math.floor(timeNumeric / 100);
-        const minutes = timeNumeric % 100;
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-        return `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-    };
+    // Display the current time
+    document.getElementById('current-time').textContent = `Current Time: ${formatTime(currentTimeNumeric)}`;
 
-    // Display the next departure and arrival times
+    // Format the next departure and arrival times as HH:MM AM/PM
     document.getElementById('result').textContent = `Next Departure: ${formatTime(nextDepartureTime)} | Arrival: ${formatTime(nextArrivalTime)}`;
 
     // Create the table rows for all times
