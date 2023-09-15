@@ -6,44 +6,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Link to your custom CSS file -->
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!-- Add the meta tag for page refresh -->
-    <meta http-equiv="refresh" content="60"> <!-- Refresh every 60 seconds -->
 </head>
 <body>
     <div class="container mt-5">
         <div class="row">
             <div class="col-12 text-center">
+                <a href="index.html" class="home-button">Home</a>
                 <h1 class="big-text">Next Bus Departure Time</h1>
-                <p class="big-text">From UTRGV-E to UTRGV-H</p>
-                <p id="current-time"></p> <!-- Display current time here -->
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <!-- Display the result -->
-                <div id="result" class="flip-display">
-                    <div class="segment">0</div>
-                    <div class="segment">0</div>
-                    <div class="segment">:</div>
-                    <div class="segment">0</div>
-                    <div class="segment">0</div>
-                    <div class="segment" id="ampm">AM</div>
-                </div>
-            </div>
-            <div class="col-md-12 text-center">
-                <!-- Table to display all times -->
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Departure Time</th>
-                            <th>Arrival Time</th>
-                        </tr>
-                    </thead>
-                    <tbody id="schedule-table-body">
-                        <!-- Times will be dynamically added here -->
-                    </tbody>
-                </table>
+                <p class="big-text">Between UTRGV</p>
+                <p id="current-time"></p>
+                <button id="route1-button" onclick="navigateTo('route1.html')">From UTRGV-E to UTRGV-H</button>
+                <button id="route2-button" onclick="navigateTo('route2.html')">From UTRGV-H to UTRGV-E</button>
             </div>
         </div>
     </div>
