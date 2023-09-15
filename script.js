@@ -1,70 +1,63 @@
-// Function to format time as AM/PM
-function formatAMPM(time) {
-    const [hours, minutes] = time.split(':');
-    const parsedHours = parseInt(hours);
-    const ampm = parsedHours >= 12 ? 'PM' : 'AM';
-    const formattedHours = parsedHours % 12 === 0 ? '12' : (parsedHours % 12).toString();
-    return `${formattedHours}:${minutes} ${ampm}`;
-}
-
-// Function to calculate the next departure time
 function calculateNextDeparture(scheduleData) {
-    // Get the current time
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
     const currentMinutes = currentTime.getMinutes();
 
-    // Convert current time to a string in HH:MM format
-    const currentTimeString = `${currentHours}:${currentMinutes < 10 ? '0' : ''}${currentMinutes}`;
+    // Convert current time to a numeric representation (e.g., 0028 for 12:28 AM)
+    const currentTimeNumeric = currentHours * 100 + currentMinutes;
 
-    // Find the next departure time and its corresponding arrival time
-    let nextDeparture = "No more departures today";
-    let nextArrival = "";
+    let nextDepartureTime = Infinity; // Initialize with a large value
+    let nextArrivalTime = '';
 
     for (let i = 0; i < scheduleData.length; i++) {
-        const row = scheduleData[i];
-        const departureTime = row[0]; // Departure time is the first column
-        const arrivalTime = row[1];   // Arrival time is the second column
+        const [departureTime, arrivalTime] = scheduleData[i].map(time => {
+            // Convert departure and arrival times to numeric representation
+            const [hours, minutes] = time.split(':');
+            return parseInt(hours) * 100 + parseInt(minutes);
+        });
 
-        if (departureTime > currentTimeString) {
-            nextDeparture = formatAMPM(departureTime);
-            nextArrival = formatAMPM(arrivalTime);
-            break;
+        // Check if the departure time is greater than the current time and earlier than the previously found next departure
+        if (departureTime > currentTimeNumeric && departureTime < nextDepartureTime) {
+            nextDepartureTime = departureTime;
+            nextArrivalTime = arrivalTime;
         }
     }
 
-    // Display the result
-    document.getElementById('result').textContent = `Next Departure: ${nextDeparture} | Arrival: ${nextArrival}`;
+    // Format the next departure and arrival times as HH:MM AM/PM
+    const formatTime = (timeNumeric) => {
+        const hours = Math.floor(timeNumeric / 100);
+        const minutes = timeNumeric % 100;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+        return `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+    };
+
+    // Display the next departure and arrival times
+    document.getElementById('result').textContent = `Next Departure: ${formatTime(nextDepartureTime)} | Arrival: ${formatTime(nextArrivalTime)}`;
 
     // Create the table rows for all times
-    const tableBody = document.querySelector('#schedule-table-body');
+    const tableBody = document.getElementById('schedule-table-body');
     tableBody.innerHTML = '';
 
     for (let i = 0; i < scheduleData.length; i++) {
-        const row = scheduleData[i];
-        const departureTime = formatAMPM(row[0]);
-        const arrivalTime = formatAMPM(row[1]);
-
+        const [departureTime, arrivalTime] = scheduleData[i];
         const rowElement = document.createElement('tr');
         rowElement.innerHTML = `<td>${departureTime}</td><td>${arrivalTime}</td>`;
         tableBody.appendChild(rowElement);
     }
 }
 
-// Fetch and parse the CSV file
 fetch('bus_schedule.csv')
     .then(response => response.text())
     .then(csvData => {
-        // Parse the CSV data
         const rows = csvData.split('\n');
         const scheduleData = [];
 
-        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+        for (let i = 1; i < rows.length; i++) {
             const columns = rows[i].split(',');
             scheduleData.push(columns);
         }
 
-        // Call the function to calculate and format the next departure and arrival times
         calculateNextDeparture(scheduleData);
     })
     .catch(error => console.error('Error:', error));
