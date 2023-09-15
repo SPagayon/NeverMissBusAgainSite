@@ -7,6 +7,8 @@ function formatTime(timeNumeric) {
     return `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
 }
 
+
+
 function calculateNextDeparture(scheduleData) {
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
@@ -64,3 +66,11 @@ fetch('bus_schedule.csv')
         calculateNextDeparture(scheduleData);
     })
     .catch(error => console.error('Error:', error));
+    // Refresh the page after a specified interval (e.g., every 60 seconds)
+    setTimeout(function () {
+        location.reload();
+    }, 60 * 1000); // 60 seconds in milliseconds
+}
+
+// Call the main function when the page is fully loaded
+window.onload = main;
