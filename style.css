@@ -63,3 +63,32 @@ p {
     font-size: 48px; /* You can adjust the font size as needed */
     margin-top: 20px;
 }
+
+/* Update button styles for improved contrast */
+.btn {
+    background-color: #ff6600; /* Orange color for the buttons */
+    border-color: #ff6600;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #e65c00; /* Darker orange on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+    }
+
+    .btn {
+        font-size: 16px; /* Smaller font size for mobile */
+        padding: 8px 16px; /* Smaller padding for mobile */
+    }
+}
