@@ -49,6 +49,10 @@ if (currentPageUrl.includes('route1.html')) {
     scheduleCsvFile = 'route1_schedule.csv'; // Change this to the filename for Route 1
 } else if (currentPageUrl.includes('route2.html')) {
     scheduleCsvFile = 'route2_schedule.csv'; // Change this to the filename for Route 2
+} else if (currentPageUrl.includes('route3.html')) {
+    scheduleCsvFile = 'route3_schedule.csv'; // Change this to the filename for Route 3
+}else if (currentPageUrl.includes('route4.html')) {
+    scheduleCsvFile = 'route4_schedule.csv'; // Change this to the filename for Route 4
 }
 
 // Load the appropriate CSV file and calculate next departure
