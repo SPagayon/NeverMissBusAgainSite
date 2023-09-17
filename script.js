@@ -3,6 +3,12 @@ function navigateTo(page) {
     window.location.href = page;
 }
 
+function isWeekend(date) {
+    const day = date.getDay(); // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
+    return day === 0 || day === 6; // Saturday or Sunday
+}
+
+
 // Function to format time as HH:MM AM/PM
 function formatTime(timeNumeric) {
     const hours = Math.floor(timeNumeric / 100);
@@ -17,22 +23,36 @@ function calculateNextDeparture(scheduleData) {
     const currentHours = currentTime.getHours();
     const currentMinutes = currentTime.getMinutes();
     const currentTimeNumeric = currentHours * 100 + currentMinutes;
+
+    if (isWeekend(currentTime)) {
+        // Display a message for weekends
+        document.getElementById('current-time').textContent = `Current Time: ${formatTime(currentTimeNumeric)}`;
+        document.getElementById('result').textContent = 'No service on weekends.';
+        document.getElementById('schedule-table-body').innerHTML = '';
+        return;
+    }
+
     let nextDepartureTime = Infinity;
     let nextArrivalTime = '';
+
     for (let i = 0; i < scheduleData.length; i++) {
         const [departureTime, arrivalTime] = scheduleData[i].map(time => {
             const [hours, minutes] = time.split(':');
             return parseInt(hours) * 100 + parseInt(minutes);
         });
+
         if (departureTime > currentTimeNumeric && departureTime < nextDepartureTime) {
             nextDepartureTime = departureTime;
             nextArrivalTime = arrivalTime;
         }
     }
+
     document.getElementById('current-time').textContent = `Current Time: ${formatTime(currentTimeNumeric)}`;
     document.getElementById('result').textContent = `Next Departure: ${formatTime(nextDepartureTime)} | Arrival: ${formatTime(nextArrivalTime)}`;
+
     const tableBody = document.getElementById('schedule-table-body');
     tableBody.innerHTML = '';
+
     for (let i = 0; i < scheduleData.length; i++) {
         const [departureTime, arrivalTime] = scheduleData[i];
         const rowElement = document.createElement('tr');
@@ -40,6 +60,7 @@ function calculateNextDeparture(scheduleData) {
         tableBody.appendChild(rowElement);
     }
 }
+
 
 // Determine the route based on the current page URL
 const currentPageUrl = window.location.href;
@@ -68,3 +89,9 @@ fetch(scheduleCsvFile)
         calculateNextDeparture(scheduleData);
     })
     .catch(error => console.error('Error:', error));
+
+    function isWeekend(date) {
+        const day = date.getDay(); // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
+        return day === 0 || day === 6; // Saturday or Sunday
+    }
+    
